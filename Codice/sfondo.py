@@ -1,7 +1,14 @@
 from main import *
+import pygame
+import random
+import sys
+from catcher import *
+from cibo import *
+from game_over import *
+from punteggio import *
 
 class sfondo:
-    def display_start_screen(self):
+    def schermo_iniziale(self):
         schermo.fill(Sfondo)
         schermo.blit(font.render("Food Catcher Game", True, BLACK), (200, 250))
         schermo.blit(font.render("Press SPACE to Start", True, BLACK), (200, 300))

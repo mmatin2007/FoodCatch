@@ -1,6 +1,10 @@
 import pygame
 import random
 import sys
+from cibo import *
+from game_over import *
+from punteggio import *
+from sfondo import *
 
 pygame.init()
 
@@ -9,7 +13,7 @@ SCREEN_HEIGHT = 600
 
 BLACK = (0, 0, 0)
 
-class cesto:
+class catcher:
     def __init__(self):
         self.width = 100
         self.height = 20
@@ -24,7 +28,6 @@ class cesto:
             self.x -= self.speed
         elif direction == 'right':
             self.x += self.speed
-        # Constrain basket to screen
         self.x = max(0, min(SCREEN_WIDTH - self.width, self.x))
 
     def draw(self, screen):

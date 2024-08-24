@@ -1,4 +1,11 @@
 from main import *
+import pygame
+import random
+import sys
+from catcher import *
+from cibo import *
+from punteggio import *
+from sfondo import *
 
 WHITE = (255, 255, 255)
 
