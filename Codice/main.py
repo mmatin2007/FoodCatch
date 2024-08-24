@@ -105,6 +105,7 @@ class main:
         for non_cibo in self.lista_non_cibo:
             non_cibo.draw(schermo)
                 
+
 def main():
     game = main()
     sfondo = sfondo()

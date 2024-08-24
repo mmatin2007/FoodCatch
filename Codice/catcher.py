@@ -1,10 +1,6 @@
 import pygame
 import random
 import sys
-from cibo import *
-from game_over import *
-from punteggio import *
-from sfondo import *
 
 pygame.init()
 

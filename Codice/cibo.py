@@ -2,10 +2,6 @@ from main import *
 import pygame
 import random
 import sys
-from catcher import *
-from game_over import *
-from punteggio import *
-from sfondo import *
 
 class cibo:
     def __init__(self, image, speed):

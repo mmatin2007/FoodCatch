@@ -2,10 +2,6 @@ from main import *
 import pygame
 import random
 import sys
-from catcher import *
-from cibo import *
-from game_over import *
-from punteggio import *
 
 class sfondo:
     def schermo_iniziale(self):
