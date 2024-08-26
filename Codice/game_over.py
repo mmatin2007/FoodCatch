@@ -1,36 +1,29 @@
-from main import *
 import pygame
-import random
 import sys
 
-WHITE = (255, 255, 255)
-
 class GameOver:
-    def __init__(self, score):
-        self.score = score
+    def __init__(self, punteggio):
+        self.punteggio = punteggio
+        self.font = pygame.font.SysFont(None, 55)
 
-    def game_over(self):
-        schermo.fill(WHITE)
-        schermo.blit(font.render("Game Over", True, BLACK), (300, 250))
-        schermo.blit(font.render(f"Punteggio: {self.score.score}", True, BLACK), (300, 300))
-        schermo.blit(font.render("Premi R per ricomiciare oppure U per uscire dal gioco", True, BLACK), (100, 350))
+    def mostra_schermo_game_over(self, schermo):
+        schermo.fill((255, 255, 255)) 
+        schermo.blit(self.font.render("Game Over", True, (255, 0, 0)), (300, 250)) 
+        schermo.blit(self.font.render(f"Punteggio: {self.punteggio.punteggio}", True, (0, 0, 0)), (300, 300))  
+        schermo.blit(self.font.render("Premi R per Riavviare o Q per Uscire", True, (0, 0, 0)), (100, 350))
         pygame.display.update()
-        self.wait_for_input()
+        self.aspetta_input()
 
-    def aspetta_input_utente(self):
-        waiting = True
-        while waiting:
-            for event in pygame.event.get():
-                
-                if event.type == pygame.QUIT:
+    def aspetta_input(self):
+        in_attesa = True
+        while in_attesa:
+            for evento in pygame.event.get():
+                if evento.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-                
-                if event.type == pygame.KEYDOWN:
-                    
-                    if event.key == pygame.K_r:
-                        waiting = False
-                    
-                    if event.key == pygame.K_q:
+                if evento.type == pygame.KEYDOWN:
+                    if evento.key == pygame.K_r:
+                        in_attesa = False
+                    if evento.key == pygame.K_q:
                         pygame.quit()
-                        sys.exit()   
+                        sys.exit()

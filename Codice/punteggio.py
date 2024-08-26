@@ -1,25 +1,21 @@
-from main import *
 import pygame
-import random
-import sys
-
-BLACK = (0, 0, 0) 
 
 class Punteggio:
     def __init__(self):
-        self.score = 0
-        self.missed_food = 0
+        self.punteggio = 0
+        self.cibo_perso = 0
+        self.font = pygame.font.SysFont(None, 55)
 
-    def aumenta_punteggio(self, amount):
-        self.score += amount
+    def aumenta_punteggio(self, quantita):
+        self.punteggio += quantita
 
-    def cibo_perso(self):
-        self.missed_food += 1
+    def aumenta_cibo_perso(self):
+        self.cibo_perso += 1
 
-    def reset(self):
-        self.score = 0
-        self.missed_food = 0
+    def resetta(self):
+        self.punteggio = 0
+        self.cibo_perso = 0
 
-    def draw(self, screen):
-        screen.blit(font.render(f"Punteggio: {self.score}", True, BLACK), (10, 10))
-        screen.blit(font.render(f"Cibo Perso: {self.missed_food}", True, BLACK), (10, 50))
+    def disegna(self, schermo):
+        schermo.blit(self.font.render(f"Punteggio: {self.punteggio}", True, (0, 0, 0)), (10, 10))
+        schermo.blit(self.font.render(f"Cibo Perso: {self.cibo_perso}", True, (0, 0, 0)), (10, 50))

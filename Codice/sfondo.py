@@ -1,23 +1,24 @@
-from main import *
 import pygame
-import random
 import sys
 
-class sfondo:
-    def schermo_iniziale(self):
-        schermo.fill(Sfondo)
-        schermo.blit(font.render("Food Catcher Game", True, BLACK), (200, 250))
-        schermo.blit(font.render("Press SPACE to Start", True, BLACK), (200, 300))
-        pygame.display.update()
-        self.wait_for_start()
+class Sfondo:
+    def __init__(self):
+        self.font = pygame.font.SysFont(None, 55)
 
-    def aspetta_a_partire(self):
-        waiting = True
-        while waiting:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
+    def mostra_schermo_iniziale(self, schermo):
+        schermo.fill((255, 255, 255)) 
+        schermo.blit(self.font.render("Gioco Raccogli Cibo", True, (0, 0, 0)), (200, 250))
+        schermo.blit(self.font.render("Premi SPAZIO per Iniziare", True, (0, 0, 0)), (200, 300))
+        pygame.display.update()
+        self.aspetta_inizio()
+
+    def aspetta_inizio(self):
+        in_attesa = True
+        while in_attesa:
+            for evento in pygame.event.get():
+                if evento.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_SPACE:
-                        waiting = False
+                if evento.type == pygame.KEYDOWN:
+                    if evento.key == pygame.K_SPACE:
+                        in_attesa = False

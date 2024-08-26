@@ -1,116 +1,120 @@
 import pygame
-import random
 import sys
-from catcher import *
-from cibo import *
-from game_over import *
-from punteggio import *
-from sfondo import *
+import random
+
+from catcher import Catcher
+from punteggio import Punteggio
+from game_over import GameOver
+from sfondo import Sfondo
+from cibo import Cibo
 
 pygame.init()
 
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+LARGHEZZA_SCHERMO = 800
+ALTEZZA_SCHERMO = 600
 
-WHITE = (255, 255, 255)
+schermo = pygame.display.set_mode((LARGHEZZA_SCHERMO, ALTEZZA_SCHERMO))
+pygame.display.set_caption("Gioco Raccogli Cibo")
 
-font = pygame.font.SysFont(None, 55)
+immagine_mela = pygame.image.load("apple.png")
+immagine_banana = pygame.image.load("banana.png")
+immagine_melone = pygame.image.load("melon.png")
+immagine_non_cibo = pygame.image.load("non_cibo.png")
 
-schermo = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("Food Catcher Game")
+immagine_mela = pygame.transform.scale(immagine_mela, (50, 50))
+immagine_banana = pygame.transform.scale(immagine_banana, (50, 50))
+immagine_melone = pygame.transform.scale(immagine_melone, (50, 50))
+immagine_non_cibo = pygame.transform.scale(immagine_non_cibo, (50, 50))
 
-Sfondo = pygame.image.load('Immagini\sfondo1.jpg')
-
-apple_image = pygame.image.load("apple.png")
-banana_image = pygame.image.load("banana.png")
-melon_image = pygame.image.load("melon.png")
-non_cibo_image = pygame.image.load("non_cibo.png")
-
-apple_image = pygame.transform.scale(apple_image, (50, 50))
-banana_image = pygame.transform.scale(banana_image, (50, 50))
-melon_image = pygame.transform.scale(melon_image, (50, 50))
-non_cibo_image = pygame.transform.scale(non_cibo_image, (50, 50))
-
-class main:
+class Main:
     def __init__(self):
-        self.catcher = catcher()
+        self.catcher = Catcher()
+        self.punteggio = Punteggio()
         self.lista_cibo = []
         self.lista_non_cibo = []
-        self.punteggio = Punteggio()  
 
-    def game_loop(self):
-        running = True
-        while running:
-            schermo.fill(WHITE)
-            self.gestione_gioco()
-            self.spostamento_catcher()
-            self.genera_cibo()
-            self.aggiorna_cibo()
-            self.catcher.draw(schermo)
-            self.punteggio.draw(schermo)
+    def ciclo_gioco(self):
+        in_corso = True
+        while in_corso:
+            schermo.fill((255, 255, 255)) 
+            self.gestisci_eventi()
+            self.muovi_catcher()
+            self.genera_oggetti()
+            self.aggiorna_oggetti()
+            self.catcher.disegna(schermo)
+            self.punteggio.disegna(schermo)
 
             if self.punteggio.cibo_perso >= 3:
-                running = False
+                in_corso = False
 
             pygame.display.update()
             pygame.time.Clock().tick(30)
 
-        GameOver(self.punteggio).game_over()
+        GameOver(self.punteggio).mostra_schermo_game_over(schermo)
 
-    def gestione_gioco(self):
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+    def gestisci_eventi(self):
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
 
-    def spostamento_catcher(self):
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT]:
-            self.basket.move('left')
-        if keys[pygame.K_RIGHT]:
-            self.basket.move('right')
+    def verifica_aumento_velocita(self):
+        if self.punteggio.punteggio >= self.soglia_punteggio and self.incremento_velocita_attuale == 0:
+            self.aumenta_velocita_cibo()
+            self.incremento_velocita_attuale += self.incremento_velocita_cibo
+            self.soglia_punteggio += 50  
 
-    def genera_cibo(self):
+    def aumenta_velocita_cibo(self):
+        for cibo in self.lista_cibo:
+            cibo.aumenta_velocita(self.incremento_velocita_cibo)
+        for non_cibo in self.lista_non_cibo:
+            non_cibo.aumenta_velocita(self.incremento_velocita_cibo)
+
+    def muovi_catcher(self):
+        tasti = pygame.key.get_pressed()
+        if tasti[pygame.K_LEFT]:
+            self.catcher.muovi('sinistra')
+        if tasti[pygame.K_RIGHT]:
+            self.catcher.muovi('destra')
+
+    def genera_oggetti(self):
         if random.randint(1, 20) == 1:
-            tipo_di_cibo = random.choice([apple_image, banana_image, melon_image])
-            self.lista_cibo.append(cibo(tipo_di_cibo, 5))
-        
+            tipo_cibo = random.choice([immagine_mela, immagine_banana, immagine_melone])
+            self.lista_cibo.append(Cibo(tipo_cibo, 5))
 
         if random.randint(1, 40) == 1:
-            non_cibo = pygame.Surface((30, 30))
-            non_cibo = ([non_cibo.png])
-            self.lista_non_cibo.append(cibo(non_cibo, 7))
+            self.lista_non_cibo.append(Cibo(immagine_non_cibo, 7))
 
-    def aggiorna_cibo(self):
+    def aggiorna_oggetti(self):
         for cibo in self.lista_cibo[:]:
-            cibo.move()
-            if cibo.y > SCREEN_HEIGHT:
-                self.punteggio.cibo_perso()
+            cibo.muovi()
+            if cibo.y > ALTEZZA_SCHERMO:
+                self.punteggio.aumenta_cibo_perso()
                 self.lista_cibo.remove(cibo)
-            if self.catcher.get_rect().colliderect(cibo.get_rect()):
+            if self.catcher.ottieni_rettangolo().colliderect(cibo.ottieni_rettangolo()):
                 self.punteggio.aumenta_punteggio(10)
                 self.lista_cibo.remove(cibo)
 
         for non_cibo in self.lista_non_cibo[:]:
-            non_cibo.move()
-            if non_cibo.y > SCREEN_HEIGHT:
+            non_cibo.muovi()
+            if non_cibo.y > ALTEZZA_SCHERMO:
                 self.lista_non_cibo.remove(non_cibo)
-            if self.catcher.get_rect().colliderect(non_cibo.get_rect()):
+            if self.catcher.ottieni_rettangolo().colliderect(non_cibo.ottieni_rettangolo()):
                 pygame.quit()
                 sys.exit()
 
         for cibo in self.lista_cibo:
-            cibo.draw(schermo)
+            cibo.disegna(schermo)
 
         for non_cibo in self.lista_non_cibo:
-            non_cibo.draw(schermo)
-                
+            non_cibo.disegna(schermo)
+
 
 def main():
-    game = main()
-    sfondo = sfondo()
-    sfondo.schermo_iniziale()
-    game.game_loop()
+    gioco = Main()
+    sfondo = Sfondo()
+    sfondo.mostra_schermo_iniziale(schermo)
+    gioco.ciclo_gioco()
 
 if __name__ == "__main__":
     main()

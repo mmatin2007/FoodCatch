@@ -1,22 +1,23 @@
-from main import * 
 import pygame
 import random
-import sys
 
-class cibo:
-    def __init__(self, image, speed):
-        self.x = random.randint(0, SCREEN_WIDTH - 50)
+class Cibo:
+    def __init__(self, immagine, velocita):
+        self.x = random.randint(0, 800 - 50)
         self.y = 0
-        self.image = image
-        self.speed = speed
-        self.width = image.get_width()
-        self.height = image.get_height()
+        self.immagine = immagine
+        self.velocita = velocita
+        self.larghezza = immagine.get_width()
+        self.altezza = immagine.get_height()
 
-    def move(self):
-        self.y += self.speed
+    def muovi(self):
+        self.y += self.velocita
 
-    def draw(self, screen):
-        screen.blit(self.image, (self.x, self.y))
+    def disegna(self, schermo):
+        schermo.blit(self.immagine, (self.x, self.y))
 
-    def get_rect(self):
-        return pygame.Rect(self.x, self.y, self.width, self.height)
+    def ottieni_rettangolo(self):
+        return pygame.Rect(self.x, self.y, self.larghezza, self.altezza)
+    
+    def aumenta_velocita(self, incremento):
+        self.velocita += incremento
